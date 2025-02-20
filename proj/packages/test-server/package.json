@@ -1,0 +1,13 @@
+{
+  "name": "test-server",
+  "version": "0.0.1",
+  "description": "本地Websocket服务器",
+  "author": "Zheng Fasheng",
+  "main": "./dist/main.js",
+  "main-menu": {
+    "项目工具/本地Websocket服务器": {
+      "message": "test-server:startServer"
+    }
+  },
+  "editor": ">=2.4.5"
+}

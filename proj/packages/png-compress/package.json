@@ -1,0 +1,30 @@
+{
+    "package_version": 2,
+    "version": "1.0.0",
+    "name": "png-compress",
+    "description": "图片压缩工具，提供两种模式，如果项目的资源比较多，建议不要勾选启用构建完成后自动压缩图片，不然会造成构建完成后，压缩图片资源时间过长",
+    "main": "./dist/main.js",
+    "panel": {
+        "title": "图片压缩",
+        "type": "dockable",
+        "main": "dist/panels/default/script/index.js",
+        "size": {
+            "min-width": 700,
+            "min-height": 700,
+            "width": 700,
+            "height": 700
+        }
+    },
+    "main-menu": {
+        "项目工具/图片压缩": {
+            "icon": "icon.png",
+            "accelerator": "CmdOrCtrl+i",
+            "message": "png-compress:open_panel"
+        }
+    },
+    "author": "Zheng Fasheng",
+    "scripts": {
+        "build": "tsc -b",
+        "watch": "tsc -w"
+    }
+}
