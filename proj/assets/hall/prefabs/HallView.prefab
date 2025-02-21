@@ -798,7 +798,7 @@
     "_normalMaterial": null,
     "_grayMaterial": null,
     "duration": 0.1,
-    "zoomScale": 1.1,
+    "zoomScale": 1.05,
     "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
@@ -1423,7 +1423,7 @@
     "_normalMaterial": null,
     "_grayMaterial": null,
     "duration": 0.1,
-    "zoomScale": 1.1,
+    "zoomScale": 1.05,
     "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
@@ -1666,7 +1666,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "091d42ee-5f5d-4f54-835a-ac5a6db2f6c1"
+      "__uuid__": "9662f5f9-4e82-47f3-a2d3-b4a3942fc866"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -1763,8 +1763,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -87.296,
-        -187.345,
+        117.272,
+        -190.353,
         0,
         0,
         0,
@@ -2048,7 +2048,7 @@
     "_normalMaterial": null,
     "_grayMaterial": null,
     "duration": 0.1,
-    "zoomScale": 1.1,
+    "zoomScale": 1.05,
     "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
@@ -2162,7 +2162,7 @@
         "__id__": 80
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": {
       "__id__": 90
@@ -2679,7 +2679,7 @@
     "_normalMaterial": null,
     "_grayMaterial": null,
     "duration": 0.1,
-    "zoomScale": 1.1,
+    "zoomScale": 1.05,
     "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,

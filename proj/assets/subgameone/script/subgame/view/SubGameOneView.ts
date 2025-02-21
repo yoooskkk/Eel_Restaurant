@@ -34,6 +34,7 @@ export default class SubGameOneView extends GameView {
     }
 
     start() {
+        return
         Manager.dispatcher.add(GameEvent.CHAT_SERVICE_CLOSE, this.doSomeThing, this);
         Manager.pool.createPool('bullet')
         Manager.asset.load(Macro.BUNDLE_SUBGAMEONE, 'prefabs/bullet', cc.Prefab, (finish, total, item) => { }, (data) => {

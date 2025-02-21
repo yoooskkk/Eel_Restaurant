@@ -22,7 +22,8 @@ export default class LoginView extends GameView {
             version.string = Manager.updateManager.getVersion(this.bundle);
         }
         this._login.on(cc.Node.EventType.TOUCH_END, () => {
-            this.enterBundle(Macro.BUNDLE_HALL);
+            // this.enterBundle(Macro.BUNDLE_HALL);
+            this.enterBundle(Macro.BUNDLE_SUBGAMEONE);
         });
     }
 }

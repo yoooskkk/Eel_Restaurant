@@ -435,6 +435,7 @@ export class UIManager implements ISingleton{
     }
 
     private loadPrefab(bundle: BUNDLE_TYPE, url: string, progressCallback: (completedCount: number, totalCount: number, item: any) => void) {
+        cc.error('loadPrefab');
         return new Promise<cc.Prefab>((resolove, reject) => {
             Manager.asset.load(bundle, url, cc.Prefab, progressCallback, (data) => {
                 if (data && data.data && data.data instanceof cc.Prefab) {

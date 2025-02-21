@@ -84,6 +84,7 @@ export class EntryManager implements ISingleton{
                 Manager.bundleManager.enterBundle(config);
             }
         }
+        cc.error(config)
     }
 
     /**
