@@ -1,6 +1,8 @@
+import { ViewZOrder } from "../../../../scripts/common/config/Config";
 import { GameEvent } from "../../../../scripts/common/event/CommonEvent";
 import GameView from "../../../../scripts/framework/core/ui/GameView";
 import { Macro } from "../../../../scripts/framework/defines/Macros";
+import FishgetUI from "./FishgetUI";
 
 const { ccclass, property } = cc._decorator;
 
@@ -14,11 +16,12 @@ export default class HallView extends GameView {
     shoproom_S: cc.Node
     kitchen_S: cc.Node
     out1_S: cc.Node
+    fish_S: cc.Node
 
     allScense: {
         shoproom: cc.Node,
         kitchen: cc.Node,
-        out1: cc.Node
+        out1: cc.Node,
     }
 
     _kitchbackbtn: cc.Node = null;
@@ -26,6 +29,7 @@ export default class HallView extends GameView {
     _kitcheninbtn: cc.Node = null;
     _out1inbtn: cc.Node = null;
     _out2btn: cc.Node = null;
+    _fishbtn: cc.Node = null
 
     _out1back: cc.Node = null;
 
@@ -34,13 +38,14 @@ export default class HallView extends GameView {
 
         this
 
+        //模拟场景
         this.shoproom_S = cc.find('shoproomscense', this.node);
         this.kitchen_S = cc.find('kitchenscense', this.node);
         this.out1_S = cc.find('out1scense', this.node);
         this.allScense = {
             shoproom: this.shoproom_S,
             kitchen: this.kitchen_S,
-            out1: this.out1_S
+            out1: this.out1_S,
         }
 
         this._kitchbackbtn = cc.find("kitchenscense/roombtn", this.node);
@@ -49,6 +54,7 @@ export default class HallView extends GameView {
         this._out1inbtn = cc.find("shoproomscense/out1btn", this.node);
 
         this._out1back = cc.find("out1scense/out1backbtn", this.node);
+        this._fishbtn = cc.find('shoproomscense/fishbtn', this.node)
         // let version = cc.find("version", this.node)?.getComponent(cc.Label);
         // if (version) {
         //     version.string = Manager.updateManager.getVersion(this.bundle);
@@ -71,6 +77,10 @@ export default class HallView extends GameView {
         this._out1back.on(cc.Node.EventType.TOUCH_END, () => {
             this.scenecMananger(1)
         });
+
+        this._fishbtn.on(cc.Node.EventType.TOUCH_END, () => {
+            Manager.uiManager.open({ type: FishgetUI,zIndex:ViewZOrder.UI, bundle: this.bundle, args: { value: 10 } })
+        }, this)
 
         let nd = new cc.Node()
         cc.tween(nd).delay(3).call(() => {
