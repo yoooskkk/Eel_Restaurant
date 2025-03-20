@@ -36,4 +36,9 @@ export class Utils implements ISingleton {
                 .start();
         }
     }
+
+    getRandomNumber(min: number, max: number, isInteger: boolean = true): number {
+        const random = Math.random() * (max - min) + min;
+        return isInteger ? Math.floor(random) : random;
+    }
 }

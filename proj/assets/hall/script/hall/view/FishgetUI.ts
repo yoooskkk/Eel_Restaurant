@@ -1,4 +1,7 @@
+import { ViewZOrder } from "../../../../scripts/common/config/Config";
+import { Utils } from "../../../../scripts/common/utils/Utils";
 import UIView from "../../../../scripts/framework/core/ui/UIView";
+import BagUIView from "./BagUIView";
 
 
 const { ccclass, property } = cc._decorator;
@@ -18,12 +21,25 @@ export default class FishgetUI extends UIView {
     line: cc.Node;
     fishshadow: cc.Node
     rodtip: cc.Node
+    prnode: cc.Node
+    resultnode: cc.Node
 
     graphics: cc.Graphics
 
     @property(cc.Color) lineColor: cc.Color = cc.Color.BLACK; // 线的颜色
 
     drlineflag: boolean = true
+
+    p1: number = -305;
+    p2: number = 28;
+    p3: number = 200;
+    p4: number = -100;
+
+    canFish: boolean = true
+
+    timeStart: boolean = false
+    leftTime: number = 8
+    lefttimestr: cc.Label = null
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -37,6 +53,11 @@ export default class FishgetUI extends UIView {
         this.line = cc.find('line', this.node);
         this.fishshadow = cc.find('fishshadow', this.node);
         this.rodtip = cc.find('rog/rodtip', this.node)
+        this.prnode = cc.find('bar/pr', this.node)
+        this.resultnode = cc.find('result', this.node)
+
+        this.lefttimestr = cc.find('lefttime/str', this.node).getComponent(cc.Label)
+        this.lefttimestr.string = `${this.leftTime}`
 
         this.rog.angle = 0;
         this.fishshadow.position = cc.v3(720, 270)
@@ -47,21 +68,72 @@ export default class FishgetUI extends UIView {
         this.pushbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
             this.pushRog()
+            this.updatePr()
         }, this)
         this.pullbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
+            this.pullRog();
+            this.stopPr();
+            this.showResult({})
+
         }, this)
         this.bagbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
+            Manager.uiManager.open({ type: BagUIView, zIndex: ViewZOrder.UI, bundle: this.bundle, args: { value: 10 } })
+
         }, this)
+
+        this.schedule(() => {
+            if (!this.timeStart)
+                return
+            this.leftTime -= 1;
+            if (this.leftTime >= 0) {
+                this.lefttimestr.string = `${this.leftTime}`
+            } else {
+                this.timeStart = false
+                this.canFish = true
+            }
+        }, 1, 1e+9)
 
         //绘制钓鱼线效果
         this.drlineflag = false;
         this.graphics = cc.find('drline', this.node).getComponent(cc.Graphics)
+
+
     }
 
     start() {
 
+    }
+
+    public updatePr() {
+        cc.Tween.stopAllByTarget(this.prnode)
+        cc.tween(this.prnode)
+            .repeatForever(
+                cc.tween().to(1, { y: 135 }).to(1, { y: -135 })
+            )
+            .start()
+    }
+
+    public stopPr() {
+        cc.Tween.stopAllByTarget(this.prnode)
+    }
+
+    public resetPr() {
+        this.prnode.y = 0
+    }
+
+    public showResult(info) {
+        this.resultnode.active = true
+        this.resultnode.opacity = 255
+        cc.Tween.stopAllByTarget(this.resultnode)
+        cc.tween(this.resultnode)
+            .delay(3)
+            .to(1,{opacity:0})
+            .call(()=>{
+                this.canFish = true
+            })
+            .start()
     }
 
     public onClose(): void {
@@ -69,6 +141,11 @@ export default class FishgetUI extends UIView {
     }
 
     public pushRog() {
+        if (!this.canFish)
+            return
+        this.timeStart = true
+        this.canFish = false
+        this.leftTime = 8
         this.rog.angle = -90
         cc.Tween.stopAllByTarget(this.rog)
         cc.tween(this.rog)
@@ -80,10 +157,36 @@ export default class FishgetUI extends UIView {
             .start()
         this.fishshadow.active = false
         cc.Tween.stopAllByTarget(this.fishshadow)
+        let px = Manager.utils.getRandomNumber(this.p1, this.p2);
+        let py = Manager.utils.getRandomNumber(this.p3, this.p4);
         cc.tween(this.fishshadow)
-            .to(0.2, { position: cc.v3(Math.random() * 200, Math.random() * 20, 0) })
+            // .to(0.2, { position: cc.v3(Math.random() * 200, Math.random() * 20, 0) })
+            .to(0.2, { position: cc.v3(px, py, 0) })
             .call(() => {
                 this.fishshadow.active = true
+            })
+            .start()
+    }
+
+    pullRog() {
+        this.timeStart = false
+        // this.canFish = true
+        this.leftTime = 8
+        this.rog.angle = 0
+        cc.Tween.stopAllByTarget(this.rog)
+        cc.tween(this.rog)
+            .to(0.2, { angle: -90 }, { easing: "backOut" })
+            .call(() => {
+                this.drlineflag = true
+            })
+            .start()
+
+        cc.Tween.stopAllByTarget(this.fishshadow)
+        cc.tween(this.fishshadow)
+            // .to(0.2, { position: cc.v3(Math.random() * 200, Math.random() * 20, 0) })
+            .to(0.2, { position: cc.v3(400, 400, 0) })
+            .call(() => {
+                this.fishshadow.active = false
             })
             .start()
     }
@@ -102,7 +205,7 @@ export default class FishgetUI extends UIView {
         let end = this.node.convertToNodeSpaceAR(endWorld);
 
         // 计算贝塞尔控制点（中点稍微下移，形成自然弧度）
-        let mid = cc.v2((start.x + end.x) / 2, (start.y + end.y) / 2 - 50);
+        let mid = cc.v2((start.x + end.x) / 2, (start.y + end.y) / 2 + 100);
 
         // 设置线条样式
         this.graphics.lineWidth = 3; // 线宽
