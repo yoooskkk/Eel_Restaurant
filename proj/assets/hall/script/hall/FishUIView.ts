@@ -10,10 +10,6 @@ export default class FishUIView extends cc.Component {
     // onLoad () {}
 
     start() {
-    }
-
-    setFishSp(num: number, fishName: string) {
-    }
-
+    }   
     // update (dt) {}
 }
