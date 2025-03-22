@@ -129,8 +129,8 @@ export default class FishgetUI extends UIView {
         cc.Tween.stopAllByTarget(this.resultnode)
         cc.tween(this.resultnode)
             .delay(3)
-            .to(1,{opacity:0})
-            .call(()=>{
+            .to(1, { opacity: 0 })
+            .call(() => {
                 this.canFish = true
             })
             .start()
@@ -164,6 +164,11 @@ export default class FishgetUI extends UIView {
             .to(0.2, { position: cc.v3(px, py, 0) })
             .call(() => {
                 this.fishshadow.active = true
+                cc.tween(this.fishshadow).delay(1)//模拟鱼在水中游动
+                    .repeatForever(
+                        cc.tween().to(0.3, { x: 1 })
+                    )
+                    .start()
             })
             .start()
     }
