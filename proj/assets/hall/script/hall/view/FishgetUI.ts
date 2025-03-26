@@ -41,6 +41,9 @@ export default class FishgetUI extends UIView {
     leftTime: number = 8
     lefttimestr: cc.Label = null
 
+    area: cc.Node = null
+    positions: cc.Vec3[] = []
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
@@ -56,6 +59,12 @@ export default class FishgetUI extends UIView {
         this.prnode = cc.find('bar/pr', this.node)
         this.resultnode = cc.find('result', this.node)
 
+        this.area = cc.find('fishswingpos', this.node)
+        for (let i = 0; i < 10; i++) {
+            let tmp = cc.find('p' + i, this.area)
+            this.positions[i] = tmp.position
+        }
+
         this.lefttimestr = cc.find('lefttime/str', this.node).getComponent(cc.Label)
         this.lefttimestr.string = `${this.leftTime}`
 
@@ -68,14 +77,13 @@ export default class FishgetUI extends UIView {
         this.pushbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
             this.pushRog()
-            this.updatePr()
+            // this.updatePr()
         }, this)
         this.pullbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
             this.pullRog();
             this.stopPr();
             this.showResult({})
-
         }, this)
         this.bagbtn.on(cc.Node.EventType.TOUCH_END, () => {
             // this.onClose();
@@ -107,12 +115,28 @@ export default class FishgetUI extends UIView {
     }
 
     public updatePr() {
-        cc.Tween.stopAllByTarget(this.prnode)
-        cc.tween(this.prnode)
-            .repeatForever(
-                cc.tween().to(1, { y: 135 }).to(1, { y: -135 })
-            )
-            .start()
+        // cc.Tween.stopAllByTarget(this.prnode)
+        // cc.tween(this.prnode)
+        //     .repeatForever(
+        //         cc.tween().to(1, { y: 135 }).to(1, { y: -135 })
+        //     )
+        //     .start()      
+
+        let count = Manager.utils.getRandomNumber(10, 16, true)
+        let ps = []
+        for (let i = 0; i < count; i++) {
+            let t = Manager.utils.getRandomNumber(0, 9, true)
+            ps[i] = this.positions[t]
+        }
+        let idx = 0
+        cc.log(count)
+        cc.Tween.stopAllByTarget(this.fishshadow)
+        let tw = cc.tween(this.fishshadow)
+        ps.forEach(po=>{
+            tw = tw.to(1, { position: po }, { easing: "sineInOut" }).delay(0.3);
+        })
+        tw.start();
+       
     }
 
     public stopPr() {
@@ -164,12 +188,12 @@ export default class FishgetUI extends UIView {
             .to(0.2, { position: cc.v3(px, py, 0) })
             .call(() => {
                 this.fishshadow.active = true
-                cc.tween(this.fishshadow).delay(1)//模拟鱼在水中游动
-                    .repeatForever(
-                        cc.tween().to(0.3, { x: 1 })
-                    )
-                    .start()
-            })
+                // cc.tween(this.fishshadow).delay(1)//模拟鱼在水中游动
+                //     .repeatForever(
+                //         cc.tween().to(0.3, { x: 1 })
+                //     )
+                //     .start()
+            }).delay(1).call(() => { this.updatePr() })
             .start()
     }
 
